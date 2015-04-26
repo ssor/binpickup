@@ -1,1 +1,1 @@
-{"Version":"1.1","FileList":[{"Path":"Bin/conf/app.conf","Checksum":"66370d2890256813f7ba7e51781fef94bb3bd75554db7cfb2138e2c30347fabd"},{"Path":"Bin/views/index.tpl","Checksum":"893e1cfb77e7bdc8be136f0eb92e15e3f176b944a3a764ab1286459847b46a79"}]}
+{"Version":"1.2","FileList":[{"Path":"Bin/conf/app.conf","Checksum":"a17c9c26844861f66e40d12c840f646c7bab6707939a1ebdcd965e27bdc764d7"},{"Path":"Bin/views/index.tpl","Checksum":"893e1cfb77e7bdc8be136f0eb92e15e3f176b944a3a764ab1286459847b46a79"}]}
