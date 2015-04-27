@@ -92,7 +92,7 @@
           <div class="row" id = "subNavBar" style="">
             <div class="col-xs-2 col-sm-2 col-md-2 col-md-lg-2" style="text-align: left;cursor:pointer;" onclick="window.location.href='/'">
                 <img src="/images/logo_pure.png" class="img-responsive" alt="Responsive image" style="width: 35px; margin-top: 6px;float: left;margin-right: 10px;">
-                <div style="color: rgba(256,256,256,1); padding-top: 10px; font-size: 18px; margin-left: -50px;">订单拣选系统</div>
+                <div id="sysName" style="color: rgba(256,256,256,1); padding-top: 10px; font-size: 18px; margin-left: -50px;">订单拣选系统</div>
             </div>
             <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
                 <a class="btn btn-link" href="/OrderListIndex" target="_blank"  role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">订单管理</a>   
