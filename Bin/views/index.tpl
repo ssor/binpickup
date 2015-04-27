@@ -148,7 +148,7 @@
       </nav> 
 
     <script>
-        //1.13
+        //1.14
     $(document).ready(function() {
       var updateTip = $("#updateTip")
       updateTip.hide()
