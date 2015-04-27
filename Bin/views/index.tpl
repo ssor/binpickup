@@ -142,13 +142,12 @@
       <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
               <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12">
-                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.15）</div>
+                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.17）</div>
               </div>
         </div>
       </nav> 
 
     <script>
-        //1.14
     $(document).ready(function() {
       var updateTip = $("#updateTip")
       updateTip.hide()
@@ -171,21 +170,19 @@
         var r = confirm("系统可以升级了，是否现在升级？")
         if (r == true) {
             $.get("/UpdateNow", function(data) {
-                if (data.Code == 0) {
-                    $('#myModal').modal('show')
-                    setInterval(function() {
-                        $.get("/TestAlive", function(data, status) {
-                            console.log(status)
-                            if (status == "success") {
-                                console.info("升级完毕")
-                                $('#myModal').modal('hide')
-                            }
-                        })
-                    }, 2000)
-                }else{
-                  alert("升级失败，请联系系统管理员")
-                }
+
             })
+
+            $('#myModal').modal('show')
+            setInterval(function() {
+                $.get("/TestAlive", function(data, status) {
+                    console.log(status)
+                    if (status == "success") {
+                        console.info("升级完毕")
+                        $('#myModal').modal('hide')
+                    }
+                })
+            }, 2000)
         }
     }
     function ShowAlertMessage(msg){
