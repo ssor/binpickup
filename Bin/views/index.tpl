@@ -90,25 +90,27 @@
       <nav class="navbar navbar-default navbar-fixed-top" style="text-align: center;background-color: rgba(0,128,0,0.8);">
         <div class="container">
           <div class="row" id = "subNavBar" style="">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-md-lg-2" style="text-align: left;cursor:pointer;" onclick="window.location.href='/'">
+            <div class="col-xs-3 col-sm-3 col-md-3 col-md-lg-3" style="text-align: left;" >
                 <img src="/images/logo_pure.png" class="img-responsive" alt="Responsive image" style="width: 35px; margin-top: 6px;float: left;margin-right: 10px;">
-                <div id="sysName" style="color: rgba(256,256,256,1); padding-top: 10px; font-size: 18px; margin-left: -50px;">订单拣选系统</div>
+                <div  style="color: rgba(256,256,256,1); padding-top: 10px; font-size: 18px; margin-left: -50px;">订单拣选系统
+                  <span id="updateTip" style="font-size: 14px; color: red; font-weight: bold;cursor:pointer;" onclick="startUpdateWaiting()">升级</span>
+                </div>
             </div>
             <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                <a class="btn btn-link" href="/OrderListIndex" target="_blank"  role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">订单管理</a>   
+                <a class="btn btn-link" href="/OrderListIndex" target="_blank"  role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;margin-left: -80px;">订单管理</a>   
             </div>    
             <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                <a class="btn btn-link" href="/MergeOrderManagementIndex"  target="_blank" role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">集合单管理</a>   
+                <a class="btn btn-link" href="/MergeOrderManagementIndex"  target="_blank" role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;margin-left: -80px;">集合单管理</a>   
             </div>    
 
             <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                <a class="btn btn-link" href="/ProductManagementIndex" target="_blank"  role="button" style="width: 100%; color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">产品管理</a>  
+                <a class="btn btn-link" href="/ProductManagementIndex" target="_blank"  role="button" style="width: 100%; color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;margin-left: -80px;">产品管理</a>  
             </div>                
             <div class="col-xs-4 col-sm-4 col-md-4 col-md-lg-4" style="text-align: left;"> </div>
 
-            <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                <!-- <a class="btn btn-link" href="/m"  target="_blank" role="button" style="width: 100%; color: rgba(256,256,256,0.9); padding-top: 10px; font-size: 16px;"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true" style="margin-right: 5px; top: 3px;"></span>集合单拣选</a> -->
-            </div>
+             <!-- <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
+               <a class="btn btn-link" href="/m"  target="_blank" role="button" style="width: 100%; color: rgba(256,256,256,0.9); padding-top: 10px; font-size: 16px;"><span class="glyphicon glyphicon-sort-by-attributes" aria-hidden="true" style="margin-right: 5px; top: 3px;"></span>集合单拣选</a> 
+            </div>-->
             <div class="col-xs-2 col-sm-2 col-md-2 col-md-lg-2">
                 <a class="btn btn-link" href="/PickUpIndex" target="_blank" role="button" style="width: 100%; color: rgba(256,256,256,0.9); padding-top: 10px; font-size: 16px;"><span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true" style="margin-right: 5px; top: 3px;"></span>订单拣选</a>
             </div>
@@ -146,40 +148,45 @@
       </nav> 
 
     <script>
- 
-        
+        //1.13
     $(document).ready(function() {
-      // checkUpdate()
-      // startUpdateWaiting()
+      var updateTip = $("#updateTip")
+      updateTip.hide()
+      setInterval(checkUpdate, 5000)
     });
+
     function checkUpdate() {
+      var updateTip = $("#updateTip")
         $.get("/NewUpdate", function(data) {
             if (data.Code == 0) {
-                var r = confirm("系统可以升级了，是否现在升级")
-                if (r == true) {
-                    $.get("/UpdateNow", function(data){
-                      if(data.Code == 0){
-                        startUpdateWaiting()
-                      }
-                    })
-                }
+               console.log("发现升级信息")
+                updateTip.show()
+            }else{
+               console.log("没有升级信息")
+              updateTip.hide()
             }
         })
     }
-    function startUpdateWaiting(){
-      $('#myModal').modal('show')
-      setInterval(function(){
-        $.get("/TestAlive", function(data, status){
-          console.log(status)
-          if(status == "success"){
-            console.info("升级完毕")
-            $('#myModal').modal('hide')
-          }
-          // if(data.Code == 0){
-          //   console.info("升级完毕")
-          // }
-        })
-      }, 2000)
+    function startUpdateWaiting() {
+        var r = confirm("系统可以升级了，是否现在升级？")
+        if (r == true) {
+            $.get("/UpdateNow", function(data) {
+                if (data.Code == 0) {
+                    $('#myModal').modal('show')
+                    setInterval(function() {
+                        $.get("/TestAlive", function(data, status) {
+                            console.log(status)
+                            if (status == "success") {
+                                console.info("升级完毕")
+                                $('#myModal').modal('hide')
+                            }
+                        })
+                    }, 2000)
+                }else{
+                  alert("升级失败，请联系系统管理员")
+                }
+            })
+        }
     }
     function ShowAlertMessage(msg){
         $("#blurAlert").text(msg).show()
