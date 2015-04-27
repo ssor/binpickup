@@ -149,7 +149,7 @@
  
         
     $(document).ready(function() {
-      checkUpdate()
+      // checkUpdate()
       // startUpdateWaiting()
     });
     function checkUpdate() {
