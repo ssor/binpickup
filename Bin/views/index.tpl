@@ -9,6 +9,7 @@
           href="/images/logo_pure.png"> 
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">    
     <style type="text/css">
+    /* 升级过程中的等待动画       */
     .spinner {
       margin: 20px auto;
       width: 50px;
@@ -61,28 +62,90 @@
         -webkit-transform: scaleY(1.0);
       }
     }
+    /*   首页中间的动画     */
 
-        .time {
-            text-align: center;
-            width:400px;
-            font-family: "Book Antiqua",Palatino,serif;
-            font-size: 40px;
-            font-weight: bold;
-            text-shadow: 1px 1px 3px #333;
-            position:absolute;
-        }
-        .time em {
-            background: white;
-            position: absolute;
-            top: 5px;
-            left: 130px;
-            height: 18px;
-            width: 140px;
-            opacity: 0.4;
-        }
+
+    .base {
+      height: 9em;
+      left: 50%;
+      margin: -7.5em;
+      padding: 3em;
+      position: absolute;
+      top: 50%;
+      width: 9em;
+      transform: rotateX(45deg) rotateZ(45deg);
+      transform-style: preserve-3d;
+    }
+
+    .cube,
+    .cube:after,
+    .cube:before {
+      content: '';
+      float: left;
+      height: 3em;
+      position: absolute;
+      width: 3em;
+    }
+
+    /* Top */
+    .cube {
+      background-color: #05afd1;
+      position: relative;
+      transform: translateZ(3em);
+      transform-style: preserve-3d;
+      transition: .25s;
+      box-shadow: 13em 13em 1.5em rgba(0, 0, 0, 0.1);
+      animation: anim 1s infinite;
+    }
+    .cube:after {
+      background-color: #049dbc;
+      transform: rotateX(-90deg) translateY(3em);
+      transform-origin: 100% 100%;
+    }
+    .cube:before {
+      background-color: #048ca7;
+      transform: rotateY(90deg) translateX(3em);
+      transform-origin: 100% 0;
+    }
+    .cube:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+    .cube:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+    .cube:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+    .cube:nth-child(4) {
+      animation-delay: 0.2s;
+    }
+    .cube:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+    .cube:nth-child(6) {
+      animation-delay: 0.3s;
+    }
+    .cube:nth-child(7) {
+      animation-delay: 0.35s;
+    }
+    .cube:nth-child(8) {
+      animation-delay: 0.4s;
+    }
+    .cube:nth-child(9) {
+      animation-delay: 0.45s;
+    }
+
+    @keyframes anim {
+      50% {
+        transform: translateZ(0.5em);
+      }
+    }
+
+
     </style>
 
     <script src="/javascripts/jquery.min.js" type="text/javascript"></script> 
+    <script src="/javascripts/prefixfree.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
   </head>
   <body >
@@ -122,10 +185,22 @@
 
       <div class="container" style="margin-top:65px;">
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12"  style="text-align:center;">
-              <img src="/images/clock.png" class="img-responsive" alt="Responsive image" style="max-width: 450px; margin-top: 0px;margin-right: 10px;display: inline;">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12"  style="min-height: 260px; font-size: 9px; margin-bottom: 70px;">
+                <div class='base' style="box-sizing: content-box;">
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                      <div class='cube'></div>
+                </div>
+              <!-- <img src="/images/clock.png" class="img-responsive" alt="Responsive image" style="max-width: 450px; margin-top: 0px;margin-right: 10px;display: inline;"> -->
+
           </div>
-          <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12"  style="text-align: center; font-size: 22px; margin-top: 10px; border-top: solid 1px rgba(111,111,111,0.3); padding-top: 15px;">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12"  style="text-align: center; font-size: 22px; margin-top: 10px; border-top: solid 1px rgba(111,111,111,0.3); padding-top: 25px;">
             忙碌和紧张，能带来高昂的工作情绪；只有全神贯注时，工作才能产生高效率
           </div>
           
@@ -142,7 +217,7 @@
       <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
               <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12">
-                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.19）</div>
+                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.20）</div>
               </div>
         </div>
       </nav> 
