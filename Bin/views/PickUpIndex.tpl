@@ -44,17 +44,15 @@
               <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
                   <!-- <a class="btn btn-link" href="/PickUpIndex" role="button" style="width: 100%; color: rgba(256,256,256,0.9); padding-top: 10px; font-size: 16px;">拣选</a> -->
               </div>
-              <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                  <!-- <a class="btn btn-link" href="/OrderListIndex" role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">订单管理</a>    -->
-              </div>    
-              <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                  <!-- <a class="btn btn-link" href="/MergeOrderManagementIndex" role="button" style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">集合单管理</a>    -->
-              </div>    
+ 
+              <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1"> </div>
 
               <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
-                  <!-- <a class="btn btn-link" href="/ProductManagementIndex" role="button" style="width: 100%; color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">产品管理</a>   -->
+                  <a id="pickupShelfID" class="btn btn-link" href="" role="button" style="width: 100%; color: rgba(256,256,256,1); padding-top: 10px; font-size: 16px;text-decoration: none; cursor: default;">{{.ShelfID}}号拣选墙</a>
               </div>                             
-
+              <div class="col-xs-1 col-sm-1 col-md-1 col-md-lg-1">
+                  <a class="btn btn-link" href="/PickUpIndex?ShelfID={{.ShelfID}}" role="button"  style="width: 100%;color: rgba(256,256,256,0.6); padding-top: 10px; font-size: 16px;">切换</a>   
+              </div>   
           </div>
       </nav>
 
@@ -72,7 +70,7 @@
             </div>
             <div class="col-xs-2 col-sm-2 col-md-2 col-md-lg-2" style="text-align: center;"> </div>
             <div class="col-xs-8 col-sm-8 col-md-8 col-md-lg-8" style="text-align: center;">
-              <div id="ordersProgressValue" style="text-align: center; font-size: 50px;margin-top: -10px; color: rgba(1,1,1,0.5);margin-bottom: 20px;cursor: pointer;" onclick="ToUncompltedDetail()" >0 </div>
+              <div id="ordersProgressValue" style="text-align: center; font-size: 50px;margin-top: -10px; color: rgba(1,1,1,0.5);margin-bottom: 20px;cursor: pointer;text-decoration: underline;" onclick="ToUncompltedDetail()" >0 </div>
             </div>
             <div class="col-xs-2 col-sm-2 col-md-2 col-md-lg-2" style="text-align: center;"> 
               <!-- <div id ="uncompletdOrdersDetail" style="text-align: center; font-size: 18px; margin-top: 27px; color: rgba(1,1,1,0.3); margin-bottom: 20px; cursor: pointer; text-decoration: underline;">详情 </div> -->
@@ -107,7 +105,7 @@
               </div>
         </div>
       </nav> 
-
+    <div>
       <audio id="soundErr"  src="/audio/err.mp3"> 您的浏览器不支持声音播放，建议使用最新版的Chrome浏览器 </audio>
       <audio id="soundOrderCompleted"  src="/audio/orderCompleted.mp3">  </audio>
       <audio id="soundProductOK"  src="/audio/productOK.mp3">  </audio>
@@ -149,6 +147,7 @@
       <audio id="sound34"  src="/audio/34号.mp3">  </audio>
       <audio id="sound35"  src="/audio/35号.mp3">  </audio>
       <audio id="sound36"  src="/audio/36号.mp3">  </audio>
+    </div>
     <script>
     var tempInput = ""
     var pauseCount = 5
@@ -264,7 +263,7 @@
           if(id.length <= 0) return
           HideAlertMessage()
           PauseInput()
-          $.get("/SubmitPickupID?ID=" + id, function(data) {
+          $.get("/SubmitPickupID?ID=" + id + "&ShelfID={{.ShelfID}}", function(data) {
                 console.log(data)
                 switch (data.StateCode) {
                     case 6://其它错误
@@ -361,7 +360,7 @@
 
     }
     function RefreshUncompletedOrdersCount(){
-      $.get("/GetUncompltedPickupOrdersCount", function(data){
+      $.get("/GetUncompltedPickupOrdersCount?ShelfID={{.ShelfID}}", function(data){
         if(data == null){
           console.error("系统异常")
         }else{
@@ -391,11 +390,13 @@
       RefreshProgress()
     }
     $(document).ready(function() {
+        $("#pickupShelfID").text("{{.ShelfID}}号拣选墙")
+
         prepareBarcodeInput()
         RefreshUncompletedOrdersCount()
-        window.onfocus = function(){
-          window.location.reload()
-        }
+        // window.onfocus = function(){
+        //   window.location.reload()
+        // }
         // setInterval(function(){
         //   playSound(productOK)
         // },3000)
@@ -420,7 +421,12 @@
       $("#inputID")[0].focus()        
     }    
     function ToUncompltedDetail(){
-      window.location.href = "/PickingupOrdersDetailIndex"
+      window.location.href = "/PickingupOrdersDetailIndex?ShelfID={{.ShelfID}}"
+    }
+    function LoopPickupShelf(){
+      $("#pickupShelfID").text("{{.ShelfID}}号拣选墙")
+      // window.location.href = "/PickUpIndex?ID={{.ID}}"
+      window.location = "/PickUpIndex?ShelfID={{.ShelfID}}"
     }
     </script>
   </body>

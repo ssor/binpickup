@@ -71,7 +71,7 @@
     <div role="main" class="main">
 
       <div class="container" style="margin-top:80px;">
-          <div class="title" style="">货位拣选详细信息</div>
+          <div class="title" style="">货位拣选详细信息({{.ShelfID}}号拣选墙)</div>
           <p class="intro">查看当前拣选尚未完成的货位的商品需求</p>
           <div class="row" id = "subNavBar" style="">
               <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12">
@@ -79,7 +79,6 @@
                 <button type="button" class="btn btn-default btn-small" onclick="reload()">&nbsp;&nbsp;刷 &nbsp; 新 &nbsp;&nbsp;</button>
                 <button type="button" class="btn btn-success btn-small" onclick="clearPos()">强制清空货位</button>
                 <button type="button" class="btn btn-success btn-small" onclick="complteOrder()">强制完成拣选中的订单</button>
-                <!-- <button type="button" class="btn btn-danger btn-small" style="margin-left:10px;" onclick="deleteRow()">&nbsp;&nbsp;删 &nbsp; 除&nbsp;&nbsp;</button> -->
                 <div style="border-bottom: solid 1px rgba(0,0,0,0.1); margin-top: 10px;"></div>
                 <table id="dtProcess" class="display" cellspacing="0" width="100%" >
                     <thead>
@@ -109,7 +108,7 @@
               "info": false,
               "searching": true,
               "ajax": {
-                  "url": "/GetPositionsNeedDetail",
+                  "url": "/GetPositionsNeedDetail?ShelfID={{.ShelfID}}",
                   "dataSrc": ""
               },
               "columns": [
@@ -159,7 +158,7 @@
                   return
               } else {
                   var id = data[0].PositionID
-                  $.get("/ClearPosition?ID=" + id, function(data) {
+                  $.get("/ClearPosition?ShelfID={{.ShelfID}}&&ID=" + id, function(data) {
                       console.log(data)
                       if (data.Code == 0) {
                           reload()
@@ -179,10 +178,10 @@
               } else {
                   var posID = data[0].PositionID
                   var orderID = data[0].OrderID
-                  $.get("/CompleteOrderForced?ID=" + orderID, function(data) {
+                  $.get("/CompleteOrderForced?ShelfID={{.ShelfID}}&&ID=" + orderID, function(data) {
                       console.log(data)
                       if (data.Code == 0) {
-                          $.get("/ClearPosition?ID=" + posID, function(data) {
+                          $.get("/ClearPosition?ShelfID={{.ShelfID}}&&ID=" + posID, function(data) {
                               console.log(data)
                               if (data.Code == 0) {
                                   reload()
@@ -196,37 +195,6 @@
                   })
               }
           }
-      }
-      function deleteRow() {
-          var b = confirm("确实要删除这些数据吗？")
-          if (b == true) {
-              var data = table.rows(".selected").data()
-              if (data.length <= 0) {
-                  return
-              } else {
-                  var id = data[0].ID
-                  $.get("/RemoveProduct?ID=" + id, function(data) {
-                      console.log(data)
-                      if (data.Code == 0) {
-                          reload()
-                      } else {
-                          alert(data.Message)
-                      }
-                  })
-              }
-          }
-      }
-      function openOrderDetailIndex() {
-          var data = table.rows(".selected").data()
-          if (data.length <= 0) {
-              return
-          } else {
-              var id = data[0].ID
-              window.open("/OrderDetailIndex?ID=" + id)
-          }        
-      }
-      function openAddOrderIndex() {
-          window.open("/AddOrderIndex")
       }
     </script>
   </body>

@@ -8,6 +8,7 @@
           type="image/png" 
           href="/images/logo_pure.png"> 
     <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">    
+    <link href="/dataTable/css/jquery.dataTables.css" rel="stylesheet" media="screen">    
     <style type="text/css">
       td.highlight {
           background-color: rgba(0,256,0, 0.1) !important;
@@ -30,6 +31,7 @@
 
     <script src="/javascripts/jquery.min.js" type="text/javascript"></script> 
     <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/dataTable/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="/javascripts/upload/ajaxfileupload.js"></script>
   </head>
   <body>
@@ -65,22 +67,6 @@
         <!-- <p class="intro">111</p>         -->
         <div style="border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 30px;"></div>
 
-        <form >
-          <label for="exampleInputFile" style="font-size: 20px;margin-bottom: 15px;">单个添加</label>
-          <div class="form-group">
-            <label for="exampleInputEmail1">产品编号</label>
-            <input type="text" class="form-control" id="inputID" placeholder="例如 21234">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">产品名称</label>
-            <input type="text" class="form-control" id="inputName" placeholder="例如  龙利鱼">
-          </div>
-
-                <button type="button" class="btn btn-success btn-small" onclick="submitOrder()">&nbsp;&nbsp;提 &nbsp; 交&nbsp;&nbsp;</button>
-        </form>
-
-        <div style="border-bottom: solid 1px rgba(0,0,0,0.1); margin-bottom: 30px; margin-top: 30px;"></div>
-
         <form style="" action="/UploadProductInfo" method="post" enctype="multipart/form-data">
           <div class="form-group">
               <label for="exampleInputFile" style="font-size: 20px;margin-bottom: 15px;">通过excel文件导入</label>
@@ -92,10 +78,42 @@
 
         </form>
 
+        <div style="border-bottom: solid 1px rgba(0,0,0,0.1); margin-bottom: 30px; margin-top: 30px;"></div>
+
+
+        <form >
+          <label for="exampleInputFile" style="font-size: 20px;margin-bottom: 15px;">单个添加</label>
+          <div class="form-group">
+            <label for="exampleInputEmail1">产品编号</label>
+            <input type="text" class="form-control" id="inputID" placeholder="例如 21234">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">产品名称</label>
+            <input type="text" class="form-control" id="inputName" placeholder="在下面列表中选择" disabled>
+          </div>
+
+                <button type="button" class="btn btn-success btn-small" onclick="submitOrder()">&nbsp;&nbsp;提 &nbsp; 交&nbsp;&nbsp;</button>
+        </form>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12">
+          <!-- <div style="border-bottom: solid 1px rgba(0,0,0,0.2); margin-bottom: 30px;"></div> -->
+          <div style="border-bottom: solid 1px rgba(0,0,0,0.1); margin-top: 10px;margin-bottom: 10px;"></div>
+          <table id="dtProcess" class="display" cellspacing="0" width="100%" >
+              <thead>
+                  <tr>
+                      <th>序号</th>
+                      <th>名称</th>
+                      <th>对应条码数量</th>
+                      <th>是否本库商品</th>
+                  </tr>
+              </thead>
+          </table>
+        </div>
+
       </div>
 
       
     <script>
+    var table;
 
     function downloadFile(){
       window.open("/files/商品sku导入模板.xlsx")
@@ -123,7 +141,7 @@
         var name = $("#inputName").val()
         console.log(productID)
         console.log(name)
-        $.get("/AddProduct?ID=" + productID + "&name=" + name, function(data) {
+        $.get("/AddProduct?ID=" + productID + "&name=" + convertPlus(name), function(data) {
             console.log(data)
             if (data.Code == 0) {
                 alert("添加成功")
@@ -132,9 +150,71 @@
             }
         })
     }
-
+    function convertPlus(str){
+      return str.replace(/\+/g, '%2B')
+    }
       $(document).ready(function() {
+          table = $('#dtProcess').DataTable( {
+              "columnDefs": [ {
+                          "searchable": false,
+                          "orderable": false,
+                          "targets": 0
+                      },{
+                          "render": function ( data, type, row ) {//完成与否
+                              if(row.ProductType == 0){
+                                return "是"
+                              }else{
+                                return "否"
+                              }
+                          },
+                          "targets": 3
+                      }, 
+                       ],
+              "paging":   false,
+              "ordering": true,
+              "order": [
+                  [2, "asc"]
+              ],
+              "info":     false,
+              "searching":  true,
+              "ajax": {
+                "url":"/ProductNameList",
+                "dataSrc":""
+              },
+              "columns": [
+                  { "data": "Name" ,"width": "10%"},
+                  // { "data": "Barcode" ,"width": "40%"},
+                  { "data": "Name" ,"width": "50%"},
+                  { "data": "BarcodeCount" ,"width": "20%"},
+                  { "width": "20%"},
+              ]
+          } );
+          table.on( 'order.dt search.dt', function () {
+                  table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                      cell.innerHTML = i+1;
+                  } );
+              } ).draw();
+          
+          $('#dtProcess tbody').on( 'click', 'tr', function () {
+              //只能选中单行
+              if ( $(this).hasClass('selected') ) {
+                  $(this).removeClass('selected');
+              }
+              else {
+                  table.$('tr.selected').removeClass('selected');
+                  $(this).addClass('selected');
+              }
+              //将选中行的商品名称放到输入框中
+              var data = table.rows(".selected").data()
+              if (data.length <= 0) {
+                  return
+              }
+              var name = data[0].Name
+              $("#inputName").val(name)
 
+              //可以选中多行
+              // $(this).toggleClass('selected');
+          } );
       });
     </script>
   </body>

@@ -217,7 +217,7 @@
       <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
               <div class="col-xs-12 col-sm-12 col-md-12 col-md-lg-12">
-                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.20）</div>
+                <div id="blurAlert" class="alert " role="alert" style="text-align: center;font-size:15px;color: rgba(111,111,111,0.6);">订单拣选系统（1.22）</div>
               </div>
         </div>
       </nav> 
@@ -226,7 +226,7 @@
     $(document).ready(function() {
       var updateTip = $("#updateTip")
       updateTip.hide()
-      setInterval(checkUpdate, 5000)
+      setInterval(checkUpdate, 60*1000)
     });
 
     function checkUpdate() {
